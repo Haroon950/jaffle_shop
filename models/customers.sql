@@ -45,6 +45,15 @@ customer_payments as (
 
 ),
 
+mrcd as (
+    select
+        customer_id,
+        max(order_date) as most_recent_completed_order
+    from orders
+    where status = 'completed'
+    group by customer_id
+), -- ny CTE
+
 final as (
 
     select
@@ -54,7 +63,8 @@ final as (
         customer_orders.first_order,
         customer_orders.most_recent_order,
         customer_orders.number_of_orders,
-        customer_payments.total_amount as customer_lifetime_value
+        customer_payments.total_amount as customer_lifetime_value,
+        mrcd.most_recent_completed_order as last_order -- Ny kolonne lagt til
 
     from customers
 
@@ -63,6 +73,9 @@ final as (
 
     left join customer_payments
         on  customers.customer_id = customer_payments.customer_id
+    
+    left join mrcd
+        on customers.customer_id = mrcd.customer_id
 
 )
 
