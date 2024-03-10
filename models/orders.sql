@@ -12,6 +12,30 @@ payments as (
 
 ),
 
+marketing_channel as (
+
+    select * from {{ ref('stg_marketing_channel') }}
+
+),
+marketing_cost as (
+    
+    select * from {{ ref('stg_marketing_channel_cost') }}
+
+),
+
+marketing_data as(
+
+    select
+        mc.marketing_id,
+        mc.marketing_channel,
+        mc.order_id,
+        mac.cost
+    from
+        marketing_channel as mc
+    left join
+        marketing_cost as mac on mc.marketing_id = mac.marketing_id
+),
+
 order_payments as (
 
     select
@@ -43,13 +67,17 @@ final as (
 
         {% endfor -%}
 
-        order_payments.total_amount as amount
+        order_payments.total_amount as amount,
+        md.marketing_channel,
+        md.cost
 
     from orders
 
 
     left join order_payments
         on orders.order_id = order_payments.order_id
+    left join marketing_data as md
+        on orders.order_id = md.order_id
 
 )
 

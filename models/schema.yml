@@ -28,6 +28,7 @@ models:
 
       - name: total_order_amount
         description: Total value (AUD) of a customer's orders
+
       - name: last_order
         description: The last order a customer has completed
 
@@ -80,5 +81,41 @@ models:
 
       - name: gift_card_amount
         description: Amount of the order (AUD) paid for by gift card
+        tests:
+          - not_null
+
+  - name: marketing
+    description: This table has information about marketing channels and costs, as well as information about marketing channel roi
+
+    columns:
+      - name: marketing_id
+        tests:
+          - unique
+          - not_null
+        description: This is a unique identifier for an marketing channel
+
+      - name: total_orders
+        description: Total number of distinct orders associated with each marketing channel
+        tests:
+          - not_null
+
+      - name: marketing_channel
+        description: The marketing channel which was used
+        tests:
+          - accepted_values:
+              values: ['cpc', 'remarketing', 'tv', 'vg', 'youtube']
+
+      - name: total_cost
+        description: Total cost of the channel
+        tests:
+          - not_null
+
+      - name: total_revenue
+        description: Total revenue generated per marketing channel
+        tests:
+          - not_null
+
+      - name: roi
+        description: Measure the profitability of each marketing channel total_revenue/total_cost
         tests:
           - not_null

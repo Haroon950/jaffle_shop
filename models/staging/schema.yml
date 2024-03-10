@@ -29,3 +29,28 @@ models:
         tests:
           - accepted_values:
               values: ['credit_card', 'coupon', 'bank_transfer', 'gift_card']
+
+  - name: stg_marketing_channel
+    columns:
+      - name: marketing_id
+        tests:
+          - not_null
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: marketing_channel
+        tests:
+          - accepted_values:
+              values: ['cpc', 'remarketing', 'tv', 'vg', 'youtube']
+              
+  - name: stg_marketing_channel_cost
+    columns:
+      - name: marketing_id
+        tests:
+          - unique
+          - not_null
+      - name: marketing_channel
+        tests:
+          - accepted_values:
+              values: ['cpc', 'remarketing', 'tv', 'vg', 'youtube']
